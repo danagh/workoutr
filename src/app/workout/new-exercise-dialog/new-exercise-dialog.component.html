@@ -1,0 +1,9 @@
+<div class="p-4">
+    <h5 class="text-xl mb-4">Lägg till övning</h5>
+    <app-exercise [group]="exerciseFormGroup"></app-exercise>
+
+    <div class="mt-4 flex flex-row justify-between w-full">
+        <button mat-button color="primary" class="w-full uppercase" (click)="addExercise()">Lägg till</button>
+        <button mat-button class="w-full uppercase" (click)="onClose()">Avbryt</button>
+    </div>
+</div>

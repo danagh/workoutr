@@ -1,0 +1,7 @@
+<div class="rounded-lg bg-violet-100 p-4 flex flex-col items-center justify-center">
+    <p class="text-slate-500 text-xs">{{ label }}</p>
+    <div class="flex flex-row items-center justify-center">
+        <p class="text-lg"><ng-content></ng-content></p>
+        <p *ngIf="unit" class="text-xs pl-1">{{ unit }}</p>
+    </div>
+</div>

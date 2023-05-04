@@ -1,0 +1,65 @@
+<div *ngIf="userProgram" class="mb-8">
+    <p class="text-slate-500 text-sm">Avslutad</p>
+    <h1 class="text-4xl mb-4">{{ userProgram.title }}</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <app-info-window label="Start">{{ userProgram.started | fbTimestamp | date: 'yyyy-MM-dd HH:mm' }}</app-info-window>
+        <app-info-window label="Slut">{{ userProgram.finishedDate | fbTimestamp | date: 'yyyy-MM-dd HH:mm' }}</app-info-window>
+        <app-info-window label="Totalvikt" unit="Kg">{{ totalWeight }}</app-info-window>
+        <app-info-window label="Antal reps" unit="reps">{{ totalReps }}</app-info-window>
+        <app-info-window label="Antal pass">{{ programWorkouts.length }}</app-info-window>
+        <app-info-window label="Snittvikt" unit="Kg/pass">{{ totalWeight | avgSetWeight : programWorkouts.length | number : '1.0-2' }}</app-info-window>
+        <app-info-window label="Antal set" unit="set">{{ totalSets }}</app-info-window>
+        <app-info-window label="Snittvikt" unit="Kg/set">{{ totalWeight | avgSetWeight: totalSets | number : '1.0-2' }}</app-info-window>
+    </div>
+
+    <h3 class="font-medium text-slate-500 uppercase mb-2 mt-8">Pass</h3>
+    <mat-accordion multi>
+        <mat-expansion-panel *ngFor="let programWorkout of programWorkouts" class="shadow-lg">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Vecka {{ programWorkout.programWeek }} Dag {{ programWorkout.programDay }}</mat-panel-title>
+                <mat-panel-description>
+                    <div class="flex flex-row w-full justify-end text-slate-500 text-xs md:text-sm font-normal">
+                        <div class="flex flex-row items-center mr-2">
+                            <mat-icon>calendar_today</mat-icon>
+                            <p class="pl-1">{{ programWorkout.finished | fbTimestamp | date : 'yyyy-MM-dd' }}</p>
+                        </div>
+                        <div class="flex flex-row items-center">
+                            <mat-icon>av_timer</mat-icon>
+                            <p class="pl-1">{{ programWorkout.duration }}</p>
+                        </div>
+                    </div>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div>
+                <div *ngFor="let exercise of programWorkout.results" class="mb-4">
+                    <div class="flex flex-row items-center" [ngClass]="{'mb-2': !exercise.comments}">
+                        <mat-icon class="text-base">fitness_center</mat-icon>
+                        <h5 class="font-medium">{{ exercise.name }}</h5>
+                    </div>
+                    <div *ngIf="exercise.comments" class="flex flex-row mb-2 items-center">
+                        <mat-icon class="text-base">comment</mat-icon>
+                        <p>{{ exercise.comments }}</p>
+                    </div>
+
+                    <div *ngFor="let set of exercise.sets; let setIndex = index" class="mb-2 flex flex-row flex-wrap justify-between items-center">
+                        <p class="text-slate-500 text-xs">Set {{ setIndex + 1 }} {{ set.warmup ? '(Uppvärmning)' : '' }}</p>
+                        <div class="flex flex-row">
+                            <p>{{ set.reps }}</p>
+                            x
+                            <p>{{ set.weight }}Kg</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="w-full mt-8">
+        <a mat-button class="uppercase w-full flex items-center" [routerLink]="['/dashboard', 'workouts']">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+            Tillbaka till min träning
+        </a>
+    </div>
+</div>

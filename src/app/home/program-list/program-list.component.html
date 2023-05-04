@@ -1,0 +1,10 @@
+<ng-container *skeleton="programs == null; repeat: 2; height: '400px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'float-left', 'mb-8']">
+    <div *ngIf="programs && programs.length > 0" class="mb-8">
+        <h3 class="font-medium text-slate-500 uppercase mb-2">{{ label }}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <ng-container *ngFor="let program of programs" >
+                <app-program-card [program]="program"></app-program-card>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,47 @@
+<div [formGroup]="group" class="mb-8">
+    <p *ngIf="exercise.comment" class="mb-4">{{ exercise.comment }}</p>
+    <div formArrayName="sets" class="mb-8">
+        <div class="flex flex-row add-warmup-set">
+            <button mat-button color="primary" (click)="addSet(true)" aria-label="Lägg till uppvärmningsset" class="text-xs uppercase">
+                <mat-icon>add</mat-icon>
+                Uppvärmningsset
+            </button>
+        </div>
+        
+        <div *ngFor="let set of sets.controls; let i = index" class="mb-8">
+            <p class="uppercase text-slate-500 text-sm">Set {{ i + 1 }} {{ set.get('warmup')!.value == true ? '(Uppvärmning)' : '' }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <app-form-input type="number" label="Vikt (Kg)" [control]="set.get('weight')!" [addMargin]="false"></app-form-input>
+                <app-form-input type="number" label="Repetitioner" [placeholder]="exercise.reps + (exercise.useRepsSpan ? '-' + exercise.repsMax : '')" [control]="set.get('reps')!" [addMargin]="false"></app-form-input>
+            </div>
+            <div class="flex justify-end remove-set">
+                <button mat-button color="warn" class="text-xs uppercase" (click)="removeSet(i)" aria-label="Ta bort set">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                    Set
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-row add-set">
+            <button mat-button color="primary" (click)="addSet(false)" aria-label="Lägg till set" class="text-xs uppercase">
+                <mat-icon>add</mat-icon>
+                Set
+            </button>
+        </div>
+    </div>
+
+    <app-form-input type="textarea" label="Övriga kommentarer" [control]="group.get('comments')!"></app-form-input>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <app-info-window label="Total vikt" unit="Kg">
+            {{ totalWeight }}
+        </app-info-window>
+        <app-info-window label="Totala reps" unit="reps">
+            {{ totalReps }}
+        </app-info-window>
+        <app-info-window label="Snittvikt" unit="Kg/set">
+            {{ totalWeight | avgSetWeight : sets.length | number : '1.0-2' }}
+        </app-info-window>
+    </div>
+</div>
+
+<app-timer [time]="exercise.restPeriod"></app-timer>

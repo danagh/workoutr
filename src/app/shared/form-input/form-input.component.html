@@ -1,0 +1,6 @@
+<mat-form-field [ngClass]="{'mb-4': addMargin}" appearance="fill">
+    <mat-label>{{ label }}</mat-label>
+    <textarea *ngIf="type === 'textarea'" matInput [formControl]="formControl"></textarea>
+    <input *ngIf="type !== 'textarea'" matInput [formControl]="formControl" [type]="type" [placeholder]="placeholder" />
+    <mat-error *ngIf="control.invalid && (control.dirty || control.touched)">{{ getErrorMessage() }}</mat-error>
+</mat-form-field>

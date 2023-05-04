@@ -1,0 +1,7 @@
+.img-container {
+    height: 50vh;
+}
+
+.img-container.loaded {
+    height: 25%;
+}

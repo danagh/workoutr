@@ -1,0 +1,11 @@
+.add-set {
+    margin-top: -3rem;
+}
+
+.remove-set {
+    margin-top: -1rem;
+}
+
+.add-warmup-set + .add-set {
+    margin-top: 1rem;
+}

@@ -1,0 +1,50 @@
+<ng-container *skeleton="program == null; height: '80vh'">
+    <div class="rounded-lg shadow-lg py-4 px-2 mb-8">
+        <div class="flex flex-row flex-wrap items-center pl-4 mb-4">
+            <h1 class="text-4xl">{{ program?.title }} - Vecka {{ trainingWeek }} Dag {{ trainingDay }}</h1>
+            <div class="bg-violet-100 p-4 rounded-lg ml-auto mr-4">
+                <p>{{ displayWorkoutTime }}</p>
+            </div>
+        </div>
+        
+        <form [formGroup]="workoutForm">
+            <mat-vertical-stepper [linear]="false" #stepper formArrayName="results">
+                <mat-step *ngFor="let result of results.controls; let exerciseIndex = index">
+                    <ng-template matStepLabel>
+                        <h2 class="text-xl">{{ exercises[exerciseIndex].name }} ({{ exercises[exerciseIndex].type | exerciseType }} övning) </h2>
+                    </ng-template>
+                    <ng-template matStepContent>
+                        <app-exercise-form [exercise]="exercises[exerciseIndex]" [group]="resultControlAsGroup(result)"></app-exercise-form>
+                        <button *ngIf="exerciseIndex < exercises.length - 1" mat-button color="primary" matStepperNext class="uppercase w-full">
+                            Nästa övning
+                            <mat-icon>keyboard_arrow_right</mat-icon> 
+                        </button>
+                        <app-loading-button *ngIf="exerciseIndex == exercises.length - 1" type="raised" color="primary" class="uppercase w-full" [loading]="isSaving" (onClick)="handleSubmit()">
+                            <div class="flex flex-row items-center">
+                                <mat-icon>save</mat-icon>
+                                <span class="pl-2">Spara resultat</span>
+                            </div>
+                        </app-loading-button>
+                        <button *ngIf="exerciseIndex > 0" mat-button matStepperPrevious class="uppercase w-full mt-4">
+                            <mat-icon>keyboard_arrow_left</mat-icon> 
+                            Föregående övning
+                        </button>
+    
+                        <button mat-button color="warn" class="uppercase w-full mt-4" (click)="removeExercise(exerciseIndex)">
+                            <mat-icon>remove_circle_outline</mat-icon>
+                            Ta bort övning
+                        </button>
+                    </ng-template>
+                </mat-step>
+            </mat-vertical-stepper>
+        </form>
+    
+        <div class="w-full mt-4">
+            <button mat-button class="w-full uppercase" (click)="openNewExerciseDialog()">
+                <mat-icon>add</mat-icon>
+                Lägg till övning
+            </button>
+        </div>
+    </div>
+</ng-container>
+

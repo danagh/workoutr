@@ -1,0 +1,26 @@
+<form class="flex flex-col" [formGroup]="form">
+    <mat-accordion multi formArrayName="exercises">
+        <mat-expansion-panel *ngFor="let exerciseForm of exercises.controls; let i = index" [expanded]="i === 0" class="shadow-none">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Övning {{ i + 1 }}</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-exercise [group]="exerciseGroupAsFormGroup(exerciseForm)"></app-exercise>
+
+            <mat-action-row>
+                <button mat-button color="warn" (click)="removeExercise(i)" class="uppercase" aria-label="Ta bort övning">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                    Övning
+                </button>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+    
+    <div>
+        <button mat-button color="primary" (click)="addNewExercise()" class="mt-2 uppercase" aria-label="Lägg till övning">
+            <mat-icon>add</mat-icon>
+            Övning
+        </button>
+    </div>
+    
+</form>

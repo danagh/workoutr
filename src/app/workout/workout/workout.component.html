@@ -1,0 +1,28 @@
+<ng-container *skeleton="program == null || userProgram == null; repeat: 4; height: '150px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'mb-4', 'float-left']">
+    <div *ngIf="program && userProgram" class="mb-8">
+        <p class="text-slate-500 text-sm">Vecka {{ userProgram.nextTrainingWeek }} Dag {{ userProgram.nextTrainingDay }} ({{ program.trainingDays[userProgram.nextTrainingDay! - 1].name }})</p>
+        <h1 class="text-4xl mb-4">{{ userProgram.title }}</h1>
+    
+        <h3 class="font-medium uppercase text-slate-500 mb-2">Övningar</h3>
+        <div class="grid grid-cols-2 gap-4">
+            <div *ngFor="let exercise of program.trainingDays[userProgram.nextTrainingDay! - 1].exercises" class="shadow-lg rounded-lg p-4">
+                <app-exercise-info [exercise]="exercise"></app-exercise-info>
+            </div>
+        </div>
+
+        <div *ngIf="lastWeekWorkout" class="mt-8 p-4 rounded-lg bg-slate-100">
+            <h3 class="font-medium uppercase text-slate-500 mb-2">Resultat föregående vecka</h3>
+            <app-workout-result [userWorkout]="lastWeekWorkout" [showTitle]="false"></app-workout-result>
+        </div>
+    
+        <a mat-raised-button color="primary" [routerLink]="['/workout', program.id, userProgram.nextTrainingWeek, userProgram.nextTrainingDay]" class="uppercase mt-8 w-full flex items-center">
+            <mat-icon>fitness_center</mat-icon>
+            Starta pass
+        </a>
+    
+        <a mat-button [routerLink]="['/dashboard', 'workouts']" class="mt-8 w-full flex items-center mb-2 uppercase">
+            <mat-icon>keyboard_arrow_left</mat-icon> 
+            Tillbaka till min träning
+        </a>
+    </div>
+</ng-container>

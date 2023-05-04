@@ -1,0 +1,9 @@
+<div class="image-upload-container">
+    <input type="file" class="hidden" (change)="onFileSelected($event)" #fileUpload [accept]="allowedFileTypes" />
+    <div class="w-full flex flex-col items-center justify-center p-4">
+        <mat-icon>cloud_upload</mat-icon>
+        <p>{{fileName || 'Ingen fil vald'}}</p>
+
+        <app-loading-button class="uppercase" (onClick)="onButtonClick(fileUpload)" [loading]="isUploading">Välj fil</app-loading-button>
+    </div>
+</div>

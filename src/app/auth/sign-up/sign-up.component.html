@@ -1,0 +1,30 @@
+<div class="rounded-lg shadow-lg">
+    <form class="flex flex-col p-6" [formGroup]="signUpForm" (ngSubmit)="onSubmit($event)">
+        <h1 class="text-4xl mb-4">Skapa ett Konto</h1>
+        
+        <app-form-input [control]="signUpForm.controls['email']" label="E-post" type="email"></app-form-input>
+        <app-form-input [control]="signUpForm.controls['password']" label="Lösenord" type="password"></app-form-input>
+        <app-form-input [control]="signUpForm.controls['passwordVerification']" label="Återupprepa lösenord" type="password"></app-form-input>
+        <app-form-input [control]="signUpForm.controls['name']" label="Namn" ></app-form-input>
+
+
+        <mat-form-field appearance="fill" class="mb-4">
+            <mat-label>Intressen</mat-label>
+            <mat-select formControlName="interests" multiple>
+                <mat-option *ngFor="let type of typeList" [value]="type">{{ type }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="interests.invalid && (interests.dirty || interests.touched)">{{ getErrorMessage(interests) }}</mat-error>
+        </mat-form-field>
+
+        <app-loading-button buttonType="submit" type="raised" color="primary" class="uppercase w-full" [loading]="isCreating">Skapa Konto</app-loading-button>
+
+        <div *ngIf="errorMessage" class="mt-4 text-red-500">
+            <span>{{ errorMessage }}</span>
+        </div>
+
+        <div class="mt-4 text-sm">
+            <span>Har du redan ett konto? Logga in </span>
+            <a [routerLink]="'/auth/sign-in'" class="underline">här</a>
+        </div>
+    </form>
+</div>

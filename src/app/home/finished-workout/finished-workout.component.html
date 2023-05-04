@@ -1,0 +1,10 @@
+<ng-container *skeleton="userWorkout == null">
+    <app-workout-result [userWorkout]="userWorkout">
+        <div class="w-full my-8">
+            <a mat-button class="uppercase w-full flex items-center" [routerLink]="['/dashboard', 'workouts']">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+                Tillbaka till min träning
+            </a>
+        </div>
+    </app-workout-result>
+</ng-container>

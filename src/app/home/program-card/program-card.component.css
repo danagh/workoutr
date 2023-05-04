@@ -1,0 +1,16 @@
+.card-actions:empty {
+    display: none;
+}
+
+.default-actions {
+    display: none;
+}
+
+.card-actions:empty + .default-actions {
+    display: flex;
+}
+
+.img-container {
+    height: 220px;
+    width: 100%;
+}

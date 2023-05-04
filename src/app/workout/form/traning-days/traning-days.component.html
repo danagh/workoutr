@@ -1,0 +1,16 @@
+<div class="mt-4 mb-8">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let day of days.controls; let i = index;" [expanded]="step === i" (opened)="setStep(i)" hideToggle class="bg-slate-100 shadow-none">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="text-slate-500 uppercase">Dag {{ i + 1}} ({{ day.get('name')!.value }})</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-exercises [form]="traningDayAsFormGroup(day)"></app-exercises>
+
+            <mat-action-row *ngIf="selectedDays.length > 1">
+                <button *ngIf="i > 0" mat-button (click)="prevStep()" class="uppercase">Föregående dag</button>
+                <button *ngIf="i < days.controls.length - 1" mat-button (click)="nextStep()" class="uppercase">Nästa dag</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

@@ -1,1 +1,52 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.mdc-text-field {
+    border-radius: 0.5rem !important;
+}
+
+.mdc-line-ripple::before, .mdc-line-ripple::after {
+    border-bottom-width: 0 !important;
+}
+
+.mat-expansion-panel {
+    border-radius: 0 !important;
+}
+
+.mat-accordion .mat-expansion-panel:first-of-type {
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+}
+
+.mat-accordion .mat-expansion-panel:last-of-type {
+    border-bottom-left-radius: 0.5rem !important;
+    border-bottom-right-radius: 0.5rem !important;
+}
+
+.mat-accordion .mat-expansion-panel.mat-expansion-panel-spacing {
+    border-radius: 0.5rem !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 0.5rem !important;
+}
+
+.mdc-menu-surface {
+    border-radius: 0.5rem !important;
+}
+
+.header-menu .mat-mdc-menu-content {
+    background: #64748b !important;
+    padding: 1rem 0 !important;
+}
+
+.header-menu .mat-mdc-menu-item {
+    padding: 0 1.5rem !important
+}
+
+.header-menu .mdc-list-item__primary-text {
+    color: #fff !important;
+    text-transform: uppercase !important;
+}

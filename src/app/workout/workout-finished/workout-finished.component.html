@@ -1,0 +1,27 @@
+<div>
+    <h1 class="text-4xl mb-4 text-violet-500">Bra kämpat {{ user?.name }}!</h1>
+
+    <div class="grid grid-cols-3 gap-4 mb-4">
+        <app-info-window label="Total vikt" unit="Kg">
+            {{ totalWeight }}
+        </app-info-window>
+        <app-info-window label="Totala reps" unit="reps">
+            {{ totalReps }}
+        </app-info-window>
+        <app-info-window label="Snittvikt" unit="Kg/set">
+            {{ totalWeight | avgSetWeight : totalSets | number : '1.0-2' }}
+        </app-info-window>
+    </div>
+
+    <div class="mb-8">
+        <p *ngIf="userProgram && !userProgram.finished; else finishedTemplate">Du förtjänar att vila innan det är dags för <b>{{ userProgram.title }} - Vecka {{ userProgram.nextTrainingWeek }} Dag {{ userProgram.nextTrainingDay }}</b></p>
+        <ng-template #finishedTemplate>
+            <p>Du är färdig med <b>{{ userWorkout?.programTitle }}</b>. Du kan antigen börja på ett nytt program eller påbörja en ny cykel av samma program.</p>
+        </ng-template>
+    </div>
+
+    <a mat-button color="primary" class="flex items-center uppercase" [routerLink]="['/dashboard', 'workouts']">
+        <mat-icon>keyboard_arrow_left</mat-icon> 
+        Tillbaka till min träning
+    </a>
+</div>

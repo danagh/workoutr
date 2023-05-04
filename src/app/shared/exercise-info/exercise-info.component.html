@@ -1,0 +1,12 @@
+<p class="text-slate-500 text-xs">{{ exercise.type | exerciseType }}</p>
+<h5 class="text-lg font-bold">{{ exercise.name }}</h5>
+<div class="flex flex-row items-center text-sm mb-2">
+    <mat-icon>library_books</mat-icon>
+    <p class="pl-2">{{ exercise.sets }} set x {{ exercise.reps }} {{ exercise.useRepsSpan ? '-' + exercise.repsMax : '' }} reps</p>
+</div>
+
+<div *ngIf="exercise.restPeriod" class="flex flex-row items-center text-sm" [ngClass]="{'mb-2': exercise.comment}">
+    <mat-icon>access_time</mat-icon>
+    <p class="pl-2">Vila {{ exercise.restPeriod }} sekunder mellan seten</p>
+</div>
+<p class="text-sm">{{ exercise.comment }}</p>

@@ -1,0 +1,37 @@
+<div class="py-4 px-2 mb-8 shadow-lg rounded-lg">
+    <h1 class="text-4xl mb-4 pl-4">Skapa ett nytt träningsprogram</h1>
+    <mat-vertical-stepper [linear]="false" #stepper>
+        <mat-step [stepControl]="generalInformationForm">
+            <ng-template matStepLabel>
+                <h2 class="text-xl">Grundläggande information</h2>
+            </ng-template>
+            <ng-template matStepContent>
+                <app-general-information [form]="generalInformationForm"></app-general-information>
+                <button mat-button color="primary" matStepperNext class="uppercase w-full flex items-center">
+                    Nästa steg
+                    <mat-icon>keyboard_arrow_right</mat-icon> 
+                </button>
+            </ng-template>
+        </mat-step>
+        <mat-step [stepControl]="trainingDaysForm">
+            <ng-template matStepLabel>
+                <h2 class="text-xl">Övningar</h2>
+            </ng-template>
+            <ng-template matStepContent>
+                <app-traning-days [form]="trainingDaysForm" [selectedDays]="getTrainingDays()"></app-traning-days>
+
+                <app-loading-button type="raised" color="primary" class="uppercase w-full flex items-center" (onClick)="createProgram()" [loading]="creatingProgram">
+                    <div class="flex flex-row items-center">
+                        <mat-icon>save</mat-icon>
+                        <span class="pl-2">Skapa program</span>
+                    </div>
+                </app-loading-button>
+
+                <button mat-button matStepperPrevious class="uppercase w-full flex items-center mt-4">
+                    <mat-icon>keyboard_arrow_left</mat-icon> 
+                    Föregående steg
+                </button>
+            </ng-template>
+        </mat-step>
+    </mat-vertical-stepper>
+</div>

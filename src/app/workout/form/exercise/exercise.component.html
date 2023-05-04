@@ -1,0 +1,46 @@
+<div [formGroup]="group">
+    <div class="mb-4 relative">
+        <mat-form-field appearance="fill">
+            <mat-label>Namn</mat-label>
+            <input type="text" matInput formControlName="name" [matAutocomplete]="auto" placeholder="Sök efter övning på engelska" />
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredExerciseOptions | async" [value]="option.name">
+                    {{ option.name }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <div *ngIf="loading$ | async as loading" class="exercise-loader absolute text-black">
+            <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    </div>
+    
+
+    <mat-form-field appearance="fill" class="mb-4">
+        <mat-label>Typ av övning</mat-label>
+        <mat-select formControlName="type">
+            <mat-option *ngFor="let exerciseType of exerciseTypes" [value]="exerciseType">
+                {{ exerciseType | exerciseType }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="group.get('type')!.invalid && (group.get('type')!.dirty || group.get('type')!.touched)">{{ getErrorMessage(group.get('type')!) }}</mat-error>
+    </mat-form-field>
+
+    <app-form-input [control]="group.get('sets')!" label="Antalet set" type="number"></app-form-input>
+
+    <div class="mb-4">
+        <mat-checkbox formControlName="useRepsSpan">Repetitionsspann</mat-checkbox>
+    </div>
+
+    <app-form-input [control]="group.get('reps')!" label="Antalet repetitioner" type="number"></app-form-input>
+
+    <ng-container *ngIf="group.get('repsMax')?.enabled">
+        <app-form-input [control]="group.get('repsMax')!" label="Max antal repetitioner" type="number"></app-form-input>
+    </ng-container>
+
+    <app-form-input [control]="group.get('comment')!" label="Kommentar om övningen" type="textarea"></app-form-input>
+
+    <app-form-input [control]="group.get('restPeriod')!" label="Vila mellan set i sekunder" type="number"></app-form-input>
+</div>

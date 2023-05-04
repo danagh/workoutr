@@ -1,0 +1,44 @@
+<form class="flex flex-col my-4" [formGroup]="form">
+    <app-form-input [control]="form.controls['title']" label="Namn"></app-form-input>
+
+    <app-form-input [control]="form.controls['description']" label="Beskrivning" type="textarea"></app-form-input>
+
+    <div class="mb-4">
+        <app-image-upload allowedFileTypes="image/*" (onUpload)="handleImageUpload($event)"></app-image-upload>
+    </div>
+    
+
+    <mat-form-field class="mb-4">
+        <mat-label>Välj programmets dagar</mat-label>
+        <div class="mt-5">
+            <mat-chip-listbox aria-label="Välj programmets dagar" multiple >
+                <mat-chip-option *ngFor="let day of daysList; let i = index" (click)="handleDayClick(day, i)">
+                    {{ day }}
+                </mat-chip-option>        
+            </mat-chip-listbox>
+        </div>
+        <input class="hidden" matInput formControlName="numberOfDays" />
+        <mat-error *ngIf="numberOfDays.invalid && (numberOfDays.dirty || numberOfDays.touched)">{{ getErrorMessage(numberOfDays) }}</mat-error>
+    </mat-form-field>
+
+    <app-form-input [control]="form.controls['length']" label="Programmets längd i veckor" type="number"></app-form-input>
+
+    <mat-form-field class="mb-4">
+        <mat-label id="level-group-label">Träningsnivå*</mat-label>
+        <div class="mt-4">
+            <mat-radio-group aria-labelledby="level-group-label" formControlName="level">
+                <mat-radio-button *ngFor="let level of levelList" [value]="level">{{ level | level }}</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <input class="hidden" matInput />
+        <mat-error *ngIf="level.invalid && (level.dirty || level.touched)">{{ getErrorMessage(level) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Typ av schema</mat-label>
+        <mat-select formControlName="type">
+            <mat-option *ngFor="let type of typeList" [value]="type">{{ type }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="type.invalid && (type.dirty || type.touched)">{{ getErrorMessage(type) }}</mat-error>
+    </mat-form-field>
+</form>

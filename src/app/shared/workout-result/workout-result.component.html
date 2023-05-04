@@ -1,0 +1,37 @@
+<ng-container *ngIf="userWorkout">
+    <ng-container *ngIf="showTitle">
+        <p class="text-slate-500 text-sm">Vecka {{userWorkout.programWeek}} Dag {{userWorkout.programDay}}</p>
+        <h1 class="text-4xl mb-4">{{userWorkout.programTitle}}</h1>
+    </ng-container>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <app-info-window label="Datum">{{ userWorkout.finished | fbTimestamp | date: 'yyyy-MM-dd HH:mm' }}</app-info-window>
+        <app-info-window label="Längd">{{ userWorkout.duration }}</app-info-window>
+        <app-info-window label="Totalvikt" unit="Kg">{{ totalWeight }}</app-info-window>
+        <app-info-window label="Antal reps" unit="reps">{{ totalReps }}</app-info-window>
+        <app-info-window label="Antal set" unit="set">{{ totalSets }}</app-info-window>
+        <app-info-window label="Snittvikt" unit="Kg/set">{{ totalWeight | avgSetWeight : totalSets | number : '1.0-2' }}</app-info-window>
+    </div>
+
+    <h3 class="font-medium text-slate-500 uppercase mt-8">Övningar</h3>
+    <div class="grid grid-cols-1 gap-4">
+        <mat-card class="rounded-lg shadow-lg" *ngFor="let exercise of userWorkout.results; let i = index">
+            <mat-card-header>
+                <mat-card-title>{{ exercise.name }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>{{ exercise.comments }}</p>
+                <div class="flex flex-row flex-wrap justify-between items-center mt-2" *ngFor="let set of exercise.sets; let setIndex = index">
+                    <p class="text-slate-500 text-xs">Set {{ setIndex + 1 }} {{ set.warmup ? '(Uppvärmning)' : '' }}</p>
+                    <div class="flex flex-row">
+                        <p>{{ set.reps }}</p>
+                        x
+                        <p>{{ set.weight }}Kg</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <ng-content></ng-content>
+</ng-container>

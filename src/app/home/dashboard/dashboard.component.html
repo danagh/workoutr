@@ -1,0 +1,48 @@
+<div>
+    <ng-container *ngIf="user">
+        <h1 class="text-4xl mb-8 text-violet-500">Välkommen {{user.name}}</h1>
+    </ng-container>
+    <ng-container *ngIf="!user">
+        <h1 class="text-4xl mb-8 text-violet-500">Välkommen till Workoutr! Logga in för att hitta program och börja träna.</h1>
+    </ng-container>
+    
+    <ng-container *ngIf="user">
+        <div *ngIf="results?.nextSession" class="mb-8">
+            <h3 class="font-medium text-slate-500 uppercase mb-2">Dags för ett pass?</h3>
+            <div class="rounded-lg shadow-lg p-4 grid grid-cols-1 sm:grid-cols-2">
+                <div class="text-center sm:text-left">
+                    <p class="text-sm">Vecka {{ results!.nextSession!.trainingWeek }} Dag {{ results!.nextSession!.trainingDay }}</p>
+                    <h5 class="text-lg font-medium">{{ results!.nextSession!.programTitle }}</h5>
+                </div>
+                <div class="mt-2 sm:mt-0 flex h-full w-full items-center">
+                    <a mat-button color="primary" class="uppercase w-full flex items-center" [routerLink]="['/workout', results!.nextSession!.programId]">
+                        Starta nästa pass
+                        <mat-icon>keyboard_arrow_right</mat-icon> 
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8 p-4 rounded-lg bg-slate-100 grid grid-cols-1 sm:grid-cols-2">
+            <div class="text-center sm:text-left flex items-center">
+                <h5 class="font-medium text-lg">Hittar du inte det du söker?</h5>
+            </div>
+            <div class="mt-2 sm:mt-0 flex h-full w-full items-center">
+                <a mat-button color="primary" class="w-full uppercase flex items-center" [routerLink]="['/workout', 'create']">
+                    <mat-icon>playlist_add</mat-icon>
+                    Skapa nytt program
+                </a>
+            </div>
+        </div>
+
+        <app-program-list label="Hitta programmet som passar dig" [programs]="filteredPrograms"></app-program-list>
+    </ng-container>
+
+    <ng-template #programTemplate let-data="data">
+        <app-program-card [program]="data"></app-program-card>
+    </ng-template>
+
+    <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <app-pagination-list [data]="allPrograms" [template]="programTemplate" label="Utforska alla program" (loadMoreEvent)="loadMorePrograms()"></app-pagination-list>
+    </div>
+</div>

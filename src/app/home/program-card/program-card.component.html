@@ -1,0 +1,18 @@
+<mat-card class="col-span-3 md:col-span-1 shadow-lg rounded-lg">
+    <div *ngIf="program.image" class="img-container bg-violet-100 animate-pulse rounded-tl-lg rounded-tr-lg">
+        <img [attr.data-src]="program.image" [alt]="'Bild för programmet ' + program.title" class="rounded-tl-lg rounded-tr-lg">
+    </div>
+    <mat-card-header>
+        <mat-card-subtitle class="text-xs text-slate-500 font-normal">{{ program.type }} | Nivå: {{ program.level | level }}</mat-card-subtitle>
+        <mat-card-title>{{ program.title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <p class="line-clamp-3">{{ program.description }}</p>
+    </mat-card-content>
+    <mat-card-actions class="mt-auto card-actions">
+        <ng-content select="[cardFooter]"></ng-content>
+    </mat-card-actions>
+    <mat-card-actions class="mt-auto card-actions default-actions">
+        <a mat-button [routerLink]="['/dashboard', 'program', program.id]" class="uppercase w-full">Läs mer</a>
+    </mat-card-actions>
+</mat-card>

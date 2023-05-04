@@ -1,0 +1,137 @@
+<ng-container *skeleton="userPrograms == null; height: '80vh'">
+    <div *ngIf="userPrograms && userPrograms.length > 0 else noUserPrograms" class="mb-8">
+        <h1 class="text-4xl mb-4">Min träning</h1>
+
+        <ng-container *skeleton="results == null; height: '200px'">
+            <div *ngIf="results?.nextSession" class="mb-8">
+                <h3 class="font-medium text-slate-500 uppercase mb-2">Dags för ett pass?</h3>
+                <div class="rounded-lg shadow-lg p-4 grid grid-cols-1 sm:grid-cols-2">
+                    <div class="text-center sm:text-left">
+                        <p class="text-sm">Vecka {{ results!.nextSession!.trainingWeek }} Dag {{ results!.nextSession!.trainingDay }}</p>
+                        <h5 class="text-lg font-medium">{{ results!.nextSession!.programTitle }}</h5>
+                    </div>
+                    <div class="mt-2 sm:mt-0 flex h-full w-full items-center">
+                        <a mat-button color="primary" class="uppercase w-full flex items-center" [routerLink]="['/workout', results!.nextSession!.programId]">
+                            Starta nästa pass
+                            <mat-icon>keyboard_arrow_right</mat-icon> 
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+            <div *ngIf="results" class="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <app-info-window label="Total vikt" unit="Kg">
+                    {{ results.totalWeight }}
+                </app-info-window>
+                <app-info-window label="Totala reps" unit="reps">
+                    {{ results.totalReps }}
+                </app-info-window>
+                <app-info-window label="Totala sets" unit="set">
+                    {{ results.totalSets }}
+                </app-info-window>
+                <app-info-window label="Snittvikt" unit="Kg/set">
+                    {{ results.totalWeight | avgSetWeight: results.totalSets | number: '1.0-2'}}
+                </app-info-window>
+                <app-info-window label="Slutförda pass">
+                    {{ results.finishedWorkouts }}
+                </app-info-window>
+                <app-info-window label="Slutförda program">
+                    {{ results.finishedPrograms }}
+                </app-info-window>
+            </div>
+
+            <div class="mb-8 p-4 rounded-lg bg-slate-100 grid grid-cols-1 sm:grid-cols-2">
+                <div class="text-center sm:text-left flex items-center">
+                    <h5 class="font-medium text-lg">Sugen på något nytt?</h5>
+                </div>
+                <div class="mt-2 sm:mt-0 flex h-full w-full items-center">
+                    <a mat-button color="primary" class="w-full uppercase flex items-center" [routerLink]="['/workout', 'create']">
+                        <mat-icon>playlist_add</mat-icon>
+                        Skapa program
+                    </a>
+                </div>
+            </div>
+        </ng-container>
+
+        <h3 class="font-medium text-slate-500 uppercase mb-2">Mina program</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <ng-container *ngFor="let program of programs; let i = index" >
+                <app-program-card [program]="program">
+                    <ng-container cardFooter>
+                        <a *ngIf="startedPrograms[i]" mat-button color="primary" [routerLink]="['/workout', program.id]" class="uppercase w-full">Nästa pass</a>
+                        <app-loading-button *ngIf="!startedPrograms[i]" color="primary" (onClick)="startProgram(program.id!, i)" [loading]="addingPrograms[i]" class="uppercase w-full">Starta</app-loading-button>
+
+                        <a mat-button [routerLink]="['/dashboard', 'program', program.id]" class="uppercase w-full">Läs mer</a>
+                    </ng-container>
+                </app-program-card>
+            </ng-container>
+        </div>
+    </div>
+
+    <ng-template #finishedWorkoutTemplate let-data="data">
+        <div class="p-4 rounded-lg bg-slate-100">
+            <p class="text-slate-500 text-sm">Vecka {{ data.body.programWeek }} Dag {{ data.body.programDay }}</p>
+            <h5 class="font-medium text-xl">{{ data.body.programTitle }}</h5>
+            <div class="w-full flex items-center flex-wrap my-2">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="pl-2">{{ data.body.finished | fbTimestamp | date: 'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="w-full flex items-center flex-wrap mb-2">
+                <mat-icon>av_timer</mat-icon>
+                <span class="pl-2">{{ data.body.duration }}</span>
+            </div>
+
+            <a mat-button class="w-full uppercase items-center" [routerLink]="['/dashboard', 'workout', data.id, 'finished']">
+                <span>Resultat</span>
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </a>
+        </div>
+    </ng-template>
+
+    <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <app-pagination-list [data]="userWorkouts" [template]="finishedWorkoutTemplate" label="Slutförda pass" (loadMoreEvent)="loadMoreWorkouts()"></app-pagination-list>
+    </div>
+
+    <ng-container *skeleton="finishedUserPrograms == null; repeat: 2; height: '150px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'float-left']">
+        <div *ngIf="finishedUserPrograms && finishedUserPrograms.length > 0" class="mb-8">
+            <h3 class="font-medium text-slate-500 uppercase mb-2">Slutförda program</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <mat-card *ngFor="let finishedUserProgram of finishedUserPrograms; let i = index" class="rounded-lg shadow-lg">
+                    <mat-card-header>
+                        <mat-card-title>{{ finishedUserProgram.body.title }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-row items-center">
+                                <mat-icon class="text-base">timer</mat-icon>
+                                <p>Start</p>
+                            </div>
+                            <p>{{ finishedUserProgram.body.started | fbTimestamp | date: 'yyyy-MM-dd HH:mm' }}</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-row items-center">
+                                <mat-icon class="text-base">timer_off</mat-icon>
+                                <p>Slut</p>
+                            </div>
+                            <p>{{ finishedUserProgram.body.finishedDate | fbTimestamp | date: 'yyyy-MM-dd HH:mm' }}</p>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions class="mt-auto flex justify-between">
+                        <app-loading-button *ngIf="finishedProgramNotOngoing(finishedUserProgram.body.id)" (onClick)="startFinishedProgram(finishedUserProgram.body, i)" color="primary" class="w-full uppercase flex items-center" [loading]="startingFinishedPrograms[i]">Starta om</app-loading-button>
+                        <a mat-button class="w-full uppercase flex items-center" [routerLink]="['/dashboard', 'program', finishedUserProgram.body.id, 'finished', finishedUserProgram.id]">Resultat</a>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
+    
+    <ng-template #noUserPrograms>
+        <div>
+            <h1 class="text-2xl mb-4">Du har inga tillagda program. Börja din träningsresa genom att utforska alla våra program.</h1>
+            <a mat-button color="primary" [routerLink]="['/dashboard']" class="w-full uppercase flex items-center">
+                <mat-icon>search</mat-icon> 
+                Sök efter program
+            </a>
+        </div>
+    </ng-template>
+</ng-container>

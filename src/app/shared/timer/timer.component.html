@@ -1,0 +1,11 @@
+<div class="fixed left-0 bottom-0 w-full">
+    <div class="fixed right-0 bottom-0">
+        <p *ngIf="timerRunning" class="text-center">{{ timer }}</p>
+        <button mat-icon-button color="primary" aria-label="Slå på timer" class="text-xl" (click)="handleTimer()">
+            <mat-icon *ngIf="!timerRunning">timer</mat-icon>
+            <mat-icon *ngIf="timerRunning">timer_off</mat-icon>
+        </button>
+    </div>
+    
+    <mat-progress-bar *ngIf="timerRunning" [mode]="timerMode" [value]="timerProgress"></mat-progress-bar>
+</div>

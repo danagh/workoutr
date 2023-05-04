@@ -1,0 +1,19 @@
+<div class="rounded-lg shadow-lg">
+    <form class="flex flex-col p-6" [formGroup]="signInForm" (ngSubmit)="onSubmit($event)">
+        <h1 class="text-4xl mb-4">Logga In</h1>
+
+        <app-form-input [control]="signInForm.controls['email']" label="E-post" type="email"></app-form-input>
+        <app-form-input [control]="signInForm.controls['password']" label="Lösenord" type="password"></app-form-input>
+
+        <app-loading-button buttonType="submit" type="raised" color="primary" class="uppercase w-full" [loading]="isLoggingIn">Logga In</app-loading-button>
+
+        <div *ngIf="errorMessage" class="mt-4 text-red-500">
+            <span>{{ errorMessage }}</span>
+        </div>
+
+        <div class="mt-4 text-sm">
+            <span>Saknar du ett konto? Skapa nytt konto </span>
+            <a [routerLink]="'/auth/sign-up'" class="underline">här</a>
+        </div>
+    </form>
+</div>

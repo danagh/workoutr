@@ -1,0 +1,9 @@
+<ng-template #labelTemplate>
+    <h3 class="font-medium text-slate-500 uppercase col-span-2">{{ label }}</h3>
+</ng-template>
+
+<ng-template #loadingButtonTemplate>
+    <div class="col-span-2">
+        <app-loading-button [loading]="loadingMore" color="primary" class="w-full uppercase" (click)="handleLoadMore()">Läs in mer</app-loading-button>
+    </div>
+</ng-template>

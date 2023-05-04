@@ -1,0 +1,8 @@
+mat-input, mat-select, mat-form-field {
+    width: 100%;
+}
+
+.exercise-loader {
+    top: calc(28px - (1.25rem / 2));
+    right: 16px;
+}
