@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development environment
 The application requires a connection to Firebase and an API Ninjas key. After you have registered a Firebase application and a free API Ninjas account create the file `src/environment.ts`. The content in there should like as follows:
-````
+```
 export const environment = {
     production: false,
     firebase: {
