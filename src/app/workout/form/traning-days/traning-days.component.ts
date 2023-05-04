@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-traning-days',
   templateUrl: './traning-days.component.html',
   styleUrls: ['./traning-days.component.css']
 })
-export class TraningDaysComponent implements OnInit  {
+export class TraningDaysComponent  {
   @Input()
   selectedDays: string[] = [];
 
@@ -19,9 +19,13 @@ export class TraningDaysComponent implements OnInit  {
 
   }
 
-  ngOnInit() {
-    for (let i = 0; i < this.selectedDays.length; i++) {
-      this.days.push(this.generateNewTrainingDay(i));
+  ngOnChanges(changes: SimpleChanges) {
+    const selectedDays = changes['selectedDays'].currentValue as string[];
+    
+    this.days.clear();
+
+    for (let i = 0; i < selectedDays.length; i++) {
+      this.days.push(this.generateNewTrainingDay(selectedDays[i], i));
     }
   }
 
@@ -45,9 +49,9 @@ export class TraningDaysComponent implements OnInit  {
     return this.form.get('days') as FormArray;
   }
 
-  private generateNewTrainingDay(index: number) {
+  private generateNewTrainingDay(selectedDay: string, index: number) {
     return this.fb.group({
-      name: [this.selectedDays[index]],
+      name: [selectedDay],
       index: [index],
       exercises: this.fb.array([])
     });
