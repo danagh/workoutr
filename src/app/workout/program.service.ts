@@ -4,6 +4,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import firebase from 'firebase/compat/app';
 import { FilterQuery, Program } from '../types/common';
 import { Observable, Subject, map, switchMap, shareReplay } from 'rxjs';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class ProgramService implements OnDestroy {
   programsOutput: Observable<Program[]>; 
   programsFilterOutput: Observable<Program[]>;
 
-  constructor(private db: AngularFirestore, private router: Router) {
+  constructor(private db: AngularFirestore, private router: Router, private notificationsService: NotificationsService) {
     this.programsInput = new Subject();
     this.programsFilterInput = new Subject();
 
@@ -67,19 +68,20 @@ export class ProgramService implements OnDestroy {
     this.programsFilterInput.unsubscribe();
   }
 
-  createProgram(program: Program) {
+  createProgram(program: Program): Promise<string> {
     program.id = this.db.createId();
     program.created = new Date();
 
     const programRef: AngularFirestoreDocument<Program> = this.db.doc(`${this.collection}/${program.id}`);
 
-    programRef.set(program, { merge: true })
+    return programRef.set(program, { merge: true })
       .then(() => {
-        this.router.navigate(['dashboard']);
+        this.notificationsService.addSuccess('Programmet har skapats!');
+        return '';
       })
       .catch(err => {
-        console.log(err);
-        window.alert(err.message);
+        this.notificationsService.addError('Programmet kunde inte skapas.');
+        return err.message;
       })
   }
 

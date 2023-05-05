@@ -1,8 +1,8 @@
-<ng-container *skeleton="userPrograms == null; height: '80vh'">
+<ng-container *skeleton="userPrograms === null; height: '80vh'">
     <div *ngIf="userPrograms && userPrograms.length > 0 else noUserPrograms" class="mb-8">
         <h1 class="text-4xl mb-4">Min träning</h1>
 
-        <ng-container *skeleton="results == null; height: '200px'">
+        <ng-container *skeleton="results === null; height: '200px'">
             <div *ngIf="results?.nextSession" class="mb-8">
                 <h3 class="font-medium text-slate-500 uppercase mb-2">Dags för ett pass?</h3>
                 <div class="rounded-lg shadow-lg p-4 grid grid-cols-1 sm:grid-cols-2">
@@ -92,7 +92,7 @@
         <app-pagination-list [data]="userWorkouts" [template]="finishedWorkoutTemplate" label="Slutförda pass" (loadMoreEvent)="loadMoreWorkouts()"></app-pagination-list>
     </div>
 
-    <ng-container *skeleton="finishedUserPrograms == null; repeat: 2; height: '150px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'float-left']">
+    <ng-container *skeleton="finishedUserPrograms === null; repeat: 2; height: '150px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'float-left']">
         <div *ngIf="finishedUserPrograms && finishedUserPrograms.length > 0" class="mb-8">
             <h3 class="font-medium text-slate-500 uppercase mb-2">Slutförda program</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

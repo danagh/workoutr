@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
 import { FilterQuery, BodyWithIdentifier, UserProgram } from '../types/common';
 import { Subject, Observable, switchMap, map, shareReplay } from 'rxjs';
+import { NotificationsService } from '../notifications/notifications.service';
 
 interface UserProgramIdentifier {
   userId: string;
@@ -16,7 +17,7 @@ export class UserProgramService implements OnDestroy {
   private activeProgramInput: Subject<UserProgramIdentifier>;
   activeProgramOutput: Observable<firebase.firestore.QueryDocumentSnapshot<UserProgram> | undefined>;
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore, private notificationsService: NotificationsService) {
     this.activeProgramInput = new Subject();
     this.activeProgramOutput = this.activeProgramInput.pipe(
       switchMap((identifier: UserProgramIdentifier) => {
@@ -43,7 +44,7 @@ export class UserProgramService implements OnDestroy {
     this.activeProgramInput.unsubscribe();
   }
 
-  addProgramToUser(userId: string, programId: string, programTitle: string): Promise<any> {
+  addProgramToUser(userId: string, programId: string, programTitle: string): Promise<boolean> {
     const userProgram = {
       id: programId,
       title: programTitle,
@@ -51,7 +52,15 @@ export class UserProgramService implements OnDestroy {
       finished: false,
     };
 
-    return this.db.collection<UserProgram>(`users/${userId}/programs`).add(userProgram);
+    return this.db.collection<UserProgram>(`users/${userId}/programs`).add(userProgram)
+      .then(() => {
+        this.notificationsService.addSuccess('Programmet har lagts till!');
+        return true;
+      })
+      .catch(() => {
+        this.notificationsService.addError('Programmet kunde inte läggas till.')
+        return false;
+      })
   }
 
   getUserPrograms(userId: string): Observable<UserProgram[]> {

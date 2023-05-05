@@ -4,6 +4,7 @@ import firebase from 'firebase/compat/app';
 import { UserWorkout, FilterQueryWithUser, BodyWithIdentifier } from '../types/common';
 import { Observable, Subject, map, switchMap, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class UserWorkoutService implements OnDestroy {
   filterWorkoutsOutput: Observable<UserWorkout[]>;
   
 
-  constructor(private db: AngularFirestore, private router: Router) {
+  constructor(private db: AngularFirestore, private router: Router, private notificationsService: NotificationsService) {
     this.paginatedWorkoutsInput = new Subject();
     this.filterWorkoutsInput = new Subject();
 
@@ -80,8 +81,13 @@ export class UserWorkoutService implements OnDestroy {
 
     return this.db.collection<UserWorkout>(`users/${userId}/workouts`).add(userWorkout)
       .then(response => {
+        this.notificationsService.addSuccess('Resultatet har registrerats!');
         return response.id;
-      });
+      })
+      .catch(() => {
+        this.notificationsService.addError('Resultatet kunde inte sparas.');
+        return '';
+      })
   }
 
   getWorkout(userId: string, workoutId: string): Promise<UserWorkout | undefined> {

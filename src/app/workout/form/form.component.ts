@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Program, TrainingDay } from 'src/app/types/common';
 import { ProgramService } from '../program.service';
@@ -29,13 +30,15 @@ export class FormComponent {
   );
 
   creatingProgram = false;
+  errorMessage = '';
 
-  constructor(private fb: FormBuilder, private programService: ProgramService) {
+  constructor(private fb: FormBuilder, private router: Router, private programService: ProgramService) {
 
   }
 
   createProgram() {
     this.creatingProgram = true;
+    this.errorMessage = '';
     
     const generalInformation = this.generalInformationForm.value;
 
@@ -51,7 +54,14 @@ export class FormComponent {
       trainingDays: this.trainingDaysForm.value.days as TrainingDay[]
     }
 
-    this.programService.createProgram(program);
+    this.programService.createProgram(program)
+      .then((errorMessage) => {
+        if (!errorMessage) {
+          this.router.navigate(['dashboard']);
+        } else {
+          this.errorMessage = errorMessage;
+        }
+      });
   }
 
   getTrainingDays(): string[] {

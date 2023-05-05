@@ -2,9 +2,9 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
-import { Router } from '@angular/router';
 import { User } from '../types/common';
 import { BehaviorSubject, Observable, map } from 'rxjs';
+import { NotificationsService } from '../notifications/notifications.service';
 
 const USER_KEY = 'user';
 const USER_DATA_KEY = 'user_data';
@@ -16,7 +16,7 @@ export class AuthService implements OnDestroy {
   private userSubject = new BehaviorSubject<firebase.User | null>(null);
   userData$: Observable<firebase.User | null> = this.userSubject.asObservable();
 
-  constructor(private auth: AngularFireAuth, private db: AngularFirestore, private router: Router) {
+  constructor(private auth: AngularFireAuth, private db: AngularFirestore, private notificationsService: NotificationsService) {
     this.auth.authState.subscribe((user: firebase.User | null) => {
       if (user) {
         this.userSubject.next(user);
@@ -52,9 +52,13 @@ export class AuthService implements OnDestroy {
       .then((result) => {
         if (result.exists) {
           localStorage.setItem(USER_DATA_KEY, JSON.stringify(result.data()));
+          this.userSubject.next(user);
+          this.notificationsService.addSuccess('Du har loggats in!');
           return true;
         } else {
           localStorage.setItem(USER_DATA_KEY, 'null');
+          this.userSubject.next(null);
+          this.notificationsService.addError('Du kunde inte logga in');
           return false;
         }
       });
@@ -64,22 +68,23 @@ export class AuthService implements OnDestroy {
     return this.auth.createUserWithEmailAndPassword(email, password)
       .then((result: firebase.auth.UserCredential) => {
         if (result.user) {
-          this.setUserData(result.user, name, interests);
-          return result.user.sendEmailVerification();
+          return this.setUserData(result.user, name, interests).then(() => {
+            this.notificationsService.addSuccess('Ditt konto har skapats!');
+            return result.user!.sendEmailVerification();
+          });
         }
-
         return;
       });
   }
 
-  signOut() {
-    this.auth.signOut()
+  signOut(): Promise<void> {
+    return this.auth.signOut()
       .then(() => {
         localStorage.removeItem(USER_KEY);
         localStorage.removeItem(USER_DATA_KEY);
         this.userSubject.next(null);
-        this.router.navigate(['auth/sign-in']);
-      })
+        this.notificationsService.addSuccess('Du har loggats ut!');
+      });
   }
 
   get isLoggedIn(): Observable<boolean> {
@@ -99,7 +104,7 @@ export class AuthService implements OnDestroy {
 
   get userInitials(): Observable<string | null> {
     return this.userData$.pipe(
-      map((userData) => {
+      map(() => {
         const user = localStorage.getItem(USER_DATA_KEY);
         return user ? JSON.parse(user) as User : null;
       }),
@@ -108,7 +113,7 @@ export class AuthService implements OnDestroy {
           return null;
         }
 
-        return user!.name!.split(' ').reduce((acc, curr) => {
+        return user.name.split(' ').reduce((acc, curr) => {
           return acc + curr[0].toUpperCase();
         }, '');
       })
@@ -124,7 +129,7 @@ export class AuthService implements OnDestroy {
       emailVerified: user.emailVerified,
     };
 
-    if (!!name) {
+    if (name) {
       userData.name = name;
     }
 

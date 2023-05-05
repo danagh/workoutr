@@ -28,6 +28,7 @@ export class WorkoutFormComponent implements OnInit, OnDestroy {
   workoutTime: number = 0;
   displayWorkoutTime: string = '';
   isSaving: boolean = false;
+  errorMessage: string = '';
   workoutForm = this.fb.group({
     results: this.fb.array([])
   });
@@ -98,6 +99,7 @@ export class WorkoutFormComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
+    this.errorMessage = '';
     this.endTimer();
 
     const userWorkout: UserWorkout = {
@@ -111,6 +113,11 @@ export class WorkoutFormComponent implements OnInit, OnDestroy {
 
     this.userWorkoutService.saveWorkoutForProgram(this.user!.id, userWorkout)
       .then((userWorkoutId: string) => {
+        if (!userWorkoutId) {
+          this.errorMessage = 'Resultatet kunde inte sparas. Försök igen lite senare.';
+          return;
+        }
+
         const programLength = parseInt(this.program!.length.toString());
         const programTrainingDays = this.program!.numberOfDays;
         let nextTrainingWeek: number = this.trainingWeek;

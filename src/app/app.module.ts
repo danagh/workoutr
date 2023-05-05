@@ -11,6 +11,7 @@ import { environment } from '../environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NotificationsModule } from './notifications/notifications.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -33,6 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
+    NotificationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

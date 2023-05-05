@@ -27,6 +27,10 @@
                     </div>
                 </app-loading-button>
 
+                <div *ngIf="errorMessage" class="mt-4 text-red-500">
+                    <span>{{ errorMessage }}</span>
+                </div>
+
                 <button mat-button matStepperPrevious class="uppercase w-full flex items-center mt-4">
                     <mat-icon>keyboard_arrow_left</mat-icon> 
                     Föregående steg

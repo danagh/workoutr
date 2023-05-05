@@ -1,0 +1,13 @@
+<div *ngFor="let message of messages | async" class="block fixed bottom-0 right-4 w-64 border-l-4 border-solid bg-white p-4 shadow-lg" [ngClass]="message.type === 'error' ? 'border-red-500' : 'border-violet-500'">
+    <div class="flex items-center">
+        <div>
+            <mat-icon *ngIf="message.type == 'error'">error_outline</mat-icon>
+            <mat-icon *ngIf="message.type == 'success'">check_circle_outline</mat-icon>
+        </div>
+        <p class='pl-2'>{{ message.text }}</p>
+        <button mat-icon-button class="ml-auto text-sm" (click)="clearMessage(message.id)" aria-label="Stäng meddelandet">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    
+</div>

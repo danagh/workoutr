@@ -1,4 +1,4 @@
-<ng-container *skeleton="program == null || userProgram == null; repeat: 4; height: '150px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'mb-4', 'float-left']">
+<ng-container *skeleton="program === null || userProgram === null; repeat: 4; height: '150px'; width: 'calc(50% - 1rem)'; className: ['mr-4', 'mb-4', 'float-left']">
     <div *ngIf="program && userProgram" class="mb-8">
         <p class="text-slate-500 text-sm">Vecka {{ userProgram.nextTrainingWeek }} Dag {{ userProgram.nextTrainingDay }} ({{ program.trainingDays[userProgram.nextTrainingDay! - 1].name }})</p>
         <h1 class="text-4xl mb-4">{{ userProgram.title }}</h1>

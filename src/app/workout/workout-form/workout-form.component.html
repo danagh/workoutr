@@ -1,4 +1,4 @@
-<ng-container *skeleton="program == null; height: '80vh'">
+<ng-container *skeleton="program === null; height: '80vh'">
     <div class="rounded-lg shadow-lg py-4 px-2 mb-8">
         <div class="flex flex-row flex-wrap items-center pl-4 mb-4">
             <h1 class="text-4xl">{{ program?.title }} - Vecka {{ trainingWeek }} Dag {{ trainingDay }}</h1>
@@ -25,6 +25,9 @@
                                 <span class="pl-2">Spara resultat</span>
                             </div>
                         </app-loading-button>
+                        <div *ngIf="errorMessage && exerciseIndex == exercises.length - 1" class="mt-4 text-red-500">
+                            <span>{{ errorMessage }}</span>
+                        </div>
                         <button *ngIf="exerciseIndex > 0" mat-button matStepperPrevious class="uppercase w-full mt-4">
                             <mat-icon>keyboard_arrow_left</mat-icon> 
                             Föregående övning

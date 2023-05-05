@@ -90,7 +90,11 @@ export class MyWorkoutsComponent implements OnInit {
   startFinishedProgram(finishedProgram: UserProgram, index: number) {
     this.startingFinishedPrograms[index] = true;
     this.userProgramService.addProgramToUser(this.user!.id, finishedProgram.id, finishedProgram.title)
-      .then(() => {
+      .then((success) => {
+        if (!success) {
+          return;
+        }
+        
         this.userProgramService.startProgram(this.user!.id, finishedProgram.id)
           .subscribe(() => {
             // Do nothing?
